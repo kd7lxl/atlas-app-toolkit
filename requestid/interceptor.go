@@ -2,6 +2,7 @@ package requestid
 
 import (
 	"context"
+	"runtime/debug"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -23,6 +24,7 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 			if perr := recover(); perr != nil {
 				err = status.Errorf(codes.Internal, "request id interceptor: %s", perr)
 				grpclog.Errorln(err)
+				grpclog.Errorln(debug.Stack())
 				res, err = nil, err
 			}
 		}()
